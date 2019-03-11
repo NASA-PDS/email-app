@@ -37,13 +37,13 @@ import gov.nasa.pds.email.SendEmail;
  * @author www.codejava.net
  * 
  */
-@WebServlet("/EmailSendingServlet")
 public class EmailSendingServlet extends HttpServlet {
 
 	private String host;
 	private String port;
 	private String user;
 	private String pass;
+	private String to;
 	private int maxMsgNums = 200;
 	final static String encType = "UTF-8";
 
@@ -54,6 +54,7 @@ public class EmailSendingServlet extends HttpServlet {
 		port = context.getInitParameter("port");
 		user = context.getInitParameter("user");
 		pass = context.getInitParameter("pass");
+		to = context.getInitParameter("recipients");
 		maxMsgNums = Integer.parseInt(context.getInitParameter("max_msg_nums"));
 	}
 
@@ -68,12 +69,12 @@ public class EmailSendingServlet extends HttpServlet {
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
 		response.setContentType("text/html");  
-		String to = "", subject = "", msg = "";
+		String subject = "", msg = "";
 
 		String reqBody = extractPostRequestBody(request);	
 		String[] items = reqBody.split("&");
 		for (int i=0; i<items.length; i++) {
-			if (items[i].startsWith("recipients")) {
+			if (to == null && items[i].startsWith("recipients")) {
 				// TODO TODO: do we need to trim the string????
 				to = items[i].substring(items[i].indexOf("=")+1);
 				// Decode HTML encoded special characters back to normal characters
@@ -119,11 +120,11 @@ public class EmailSendingServlet extends HttpServlet {
 					}
 					addressList = new ArrayList<String>(Arrays.asList(to.split(",")));
 					mailer.send(addressList, subject, msg);
-					System.out.println("mailing to multiple users....");
+					System.out.println("mailing to multiple users: " + to);
 				}
 				else {
 					mailer.send(to, subject, msg);  
-					System.out.println("mailing to one user....");
+					System.out.println("mailing to one user: " + to);
 				}
 
 				resultMessage = "The e-mail was sent successfully";			

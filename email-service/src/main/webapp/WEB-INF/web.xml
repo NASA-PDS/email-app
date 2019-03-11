@@ -33,7 +33,25 @@
     <param-value>200</param-value>
   </context-param>
 
+  <context-param>
+    <param-name>recipients</param-name>
+    <param-value>pds_operator@jpl.nasa.gov</param-value>
+  </context-param>
+
   <welcome-file-list>
     <welcome-file>EmailForm.jsp</welcome-file>
   </welcome-file-list>
+
+  <servlet>
+    <servlet-name>EmailSendingServlet</servlet-name>
+    <servlet-class>gov.nasa.pds.email.EmailSendingServlet</servlet-class>
+    <load-on-startup>1</load-on-startup>
+  </servlet>
+
+  <!-- If needed, update this url-pattern for Feedback Widget -->
+  <servlet-mapping>
+    <servlet-name>EmailSendingServlet</servlet-name>
+    <url-pattern>/EmailSendingServlet</url-pattern>
+  </servlet-mapping>
+
 </web-app>
