@@ -68,7 +68,8 @@ public class EmailSendingServlet extends HttpServlet {
 
 	public void doPost(HttpServletRequest request,
 			HttpServletResponse response) throws ServletException, IOException {
-		response.setContentType("text/html");  
+		response.setContentType("text/html");
+		response.addHeader("Access-Control-Allow-Origin", "*");
 		String subject = "", msg = "";
 
 		String reqBody = extractPostRequestBody(request);	
