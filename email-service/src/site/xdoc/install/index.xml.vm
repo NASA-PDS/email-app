@@ -32,8 +32,8 @@
       <ul>
         <li><a href="#System_Requirements">System Requirements</a></li>
         <li><a href="#Unpacking_the_Package">Unpacking the Package</a></li>
-        <li><a href="#Configuring_the_SMTP_Server">Configuring the SMTP Server</a></li>
-        <li><a href="#Configuring_for_Feedback_Widget">Configuring for Feedback Widget</a></li>
+        <li><a href="#Configuring_the_SMTP_Server">Configuring the Generic SMTP Server</a></li>
+        <li><a href="#Configuring_for_Feedback_Widget">Configuring for Feedback Widget (EN Deployment Only)</a></li>
         <li><a href="#Testing">Testing</a></li>
       </ul>
     </section>
@@ -163,6 +163,7 @@ or
     </section>
 
     <section name="Configuring for Feedback Widget">
+      <p>Note: These steps are intended for deployment on PDS website and testing for Feedback widget. This will break the default UI that comes packaged with the Email Service.</p>
       <p>To allow for Feedback emails, we want to configure a specific endpoint to be more explicit, as well as allow for the opportunity to spin up additional Email Servlets in the future. You can do so by editting the file <i>$TOMCAT_HOME/webapps/${project.artifactId}/WEB-INF/web.xml</i> by updating the servlet-mapping url-pattern to be <i>SubmitFeedback</i>:</p>
 
       <p>Before update:</p>
