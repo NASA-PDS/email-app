@@ -32,6 +32,7 @@
       <ul>
         <li><a href="#System_Requirements">System Requirements</a></li>
         <li><a href="#Unpacking_the_Package">Unpacking the Package</a></li>
+	<li><a href="#Configuring_HTTP_Proxy">Configuring HTTP Proxy</a></li>
         <li><a href="#Configuring_the_SMTP_Server">Configuring the Generic SMTP Server</a></li>
         <li><a href="#Configuring_for_Feedback_Widget">Configuring for Feedback Widget (EN Deployment Only)</a></li>
         <li><a href="#Testing">Testing</a></li>
@@ -110,6 +111,20 @@ or
     <section name="Deploying the Application">
       <p>The Email Service web application is packaged as a WAR file and is intended for installation under a standard Java Application Server. For a Tomcat server deployment, the WAR file is normally copied directly to the <i>webapps</i> directory within the Tomcat installation or installed via the Manager interface. Once this step is complete, the application is ready for configuration.
       </p>
+    </section>
+    
+    <section name="Configuring HTTP Proxy">
+      <p>An HTTP Proxy needs to be setup to enable the service deployed on Tomcat. Add the following to the Apache HTTP Server config:</p>
+
+      <source>
+    ProxyPass /email-service http://localhost:8080/email-service
+    ProxyPassReverse /email-service http://localhost:8080/email-service
+    &lt;LocationMatch /email-service&gt;
+        Order Deny,Allow
+        Deny from all
+        Allow from [IP/netmask combinations] .jpl.nasa.gov
+    &lt;/LocationMatch&gt;
+     </source>
     </section>
 
     <section name="Configuring the SMTP Server">
