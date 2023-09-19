@@ -19,7 +19,7 @@
   <parent>
     <groupId>gov.nasa.pds.2010</groupId>
     <artifactId>email</artifactId>
-    <version>0.1.0</version>
+    <version>0.2.0-SNAPSHOT</version>
   </parent>
 
   <groupId>gov.nasa.pds.2010.email</groupId>
@@ -45,7 +45,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-war-plugin</artifactId>
-        <version>2.6</version>
+        <version>3.4.0</version>
         <configuration>
           <warName>email-service</warName>
           <archive>
@@ -77,28 +77,11 @@
     </plugins>
   </build>
 
-  <repositories>
-    <!-- Hosts the PDS and OODT artifacts. -->
-    <repository>
-      <id>pds-repo</id>
-      <name>PDS Maven Repository</name>
-      <url>https://pds-cm.jpl.nasa.gov/maven2</url>
-      <releases>
-        <enabled>true</enabled>
-        <updatePolicy>always</updatePolicy>
-        <checksumPolicy>warn</checksumPolicy>
-      </releases>
-      <snapshots>
-        <enabled>false</enabled>
-      </snapshots>
-    </repository>
-  </repositories>
-
   <dependencies>
     <dependency>
       <groupId>gov.nasa.pds.2010.email</groupId>
       <artifactId>email-core</artifactId>
-      <version>${email-version}</version>
+      <version>0.2.0-SNAPSHOT</version>
       <scope>compile</scope>
     </dependency>
     <dependency>
