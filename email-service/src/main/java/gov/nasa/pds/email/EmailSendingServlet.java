@@ -15,20 +15,16 @@
 package gov.nasa.pds.email;
 
 import java.io.IOException;
-import java.io.PrintWriter; 
-import java.util.Scanner;
+import java.net.URLDecoder;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.net.URLDecoder;
-
+import java.util.Scanner;
+import java.util.logging.Logger;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import gov.nasa.pds.email.SendEmail;
 
 /**
  * A servlet that takes message details from user and send it as a new e-mail
@@ -39,6 +35,9 @@ import gov.nasa.pds.email.SendEmail;
  */
 public class EmailSendingServlet extends HttpServlet {
 
+  private static Logger LOG = Logger.getLogger(EmailSendingServlet.class.getName());
+
+	private static final long serialVersionUID = 5058857889035951692L;
 	private String host;
 	private String port;
 	private String user;
@@ -59,11 +58,18 @@ public class EmailSendingServlet extends HttpServlet {
 	}
 
 	static String extractPostRequestBody(HttpServletRequest request) throws IOException {
+		Scanner s = null;
+		try {
 		if ("POST".equalsIgnoreCase(request.getMethod())) {
-			Scanner s = new Scanner(request.getInputStream(), encType).useDelimiter("\\A");
+			s = new Scanner(request.getInputStream(), encType).useDelimiter("\\A");
 			return s.hasNext() ? s.next() : "";
 		}
 		return "";
+		} finally {
+			if (s != null) {
+				s.close();
+			}
+		}
 	}
 
 	public void doPost(HttpServletRequest request,
@@ -72,15 +78,11 @@ public class EmailSendingServlet extends HttpServlet {
 		response.addHeader("Access-Control-Allow-Origin", "*");
 		String subject = "", msg = "";
 
-		String reqBody = extractPostRequestBody(request);	
+		String reqBody = extractPostRequestBody(request);
+        LOG.info("Email App Request: " + reqBody);
+
 		String[] items = reqBody.split("&");
 		for (int i=0; i<items.length; i++) {
-			if (to == null && items[i].startsWith("recipients")) {
-				// TODO TODO: do we need to trim the string????
-				to = items[i].substring(items[i].indexOf("=")+1);
-				// Decode HTML encoded special characters back to normal characters
-				to = URLDecoder.decode(to, encType);
-			}
 			if (items[i].startsWith("subject")) {
 				subject = items[i].substring(items[i].indexOf("=")+1);
 				subject = URLDecoder.decode(subject, encType);
@@ -90,25 +92,23 @@ public class EmailSendingServlet extends HttpServlet {
 				msg = URLDecoder.decode(msg, encType); 
 			}
 		}
-		//System.out.println("recipient = '" + to + "'    subject = " + subject + "    msg = " + msg);
 
 		String resultMessage = "";
 		try {
 			SendEmail mailer;
 			
-			//System.out.println("username = *" + user + "*      password = *" + pass + "*");
 			if (user.equals("") && pass.equals("")) {
 				mailer = new SendEmail(host, port);
-				System.out.println("set mailer with host, port...");
+                LOG.fine("set mailer with host, port...");
 			} 
 			else {
 				if (user!=null && pass!=null) {
 					mailer = new SendEmail(host, port, user, pass);
-					System.out.println("set mailer with host, port, user, pass...");
+                    LOG.fine("set mailer with host, port, user, pass...");
 				}
 				else { 
 					mailer = new SendEmail(host, port);
-					System.out.println("set mailer with host, port...");
+                    LOG.fine("set mailer with host, port...");
 				}
 			}
 			mailer.setMaxMsgNums(maxMsgNums);
@@ -121,21 +121,21 @@ public class EmailSendingServlet extends HttpServlet {
 					}
 					addressList = new ArrayList<String>(Arrays.asList(to.split(",")));
 					mailer.send(addressList, subject, msg);
-					System.out.println("mailing to multiple users: " + to);
+                    LOG.info("mailing to multiple users: " + to);
 				}
 				else {
 					mailer.send(to, subject, msg);  
-					System.out.println("mailing to one user: " + to);
+                    LOG.info("mailing to one user: " + to);
 				}
 
 				resultMessage = "The e-mail was sent successfully";			
 				//resultMessage += "\nTO: " + to
 				//		      + "\nSUBJECT: " + subject 
 				//		      + "\nMessage: " + msg + "\n";
-				System.out.println("A message has been sent successfully....");  
+                LOG.info("A message has been sent successfully....");
 			}
 			else {
-				System.out.println("Having an issue to instantiate SendEmail class....");
+              LOG.severe("Having an issue to instantiate SendEmail class....");
 				resultMessage = "There is an error to instantiate SendEmail().";
 			}
 		}catch (Exception ex) {
