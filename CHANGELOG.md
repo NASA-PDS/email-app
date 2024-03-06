@@ -1,5 +1,9 @@
 # Changelog
 
+## [v0.0.0](https://github.com/NASA-PDS/email-app/tree/v0.0.0) (2024-03-06)
+
+[Full Changelog](https://github.com/NASA-PDS/email-app/compare/v0.1.0...v0.0.0)
+
 ## [v0.1.0](https://github.com/NASA-PDS/email-app/tree/v0.1.0) (2024-03-06)
 
 [Full Changelog](https://github.com/NASA-PDS/email-app/compare/3ed372b946d6043286f42a38f70a7685a0f4b98b...v0.1.0)
