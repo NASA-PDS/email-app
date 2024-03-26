@@ -72,6 +72,9 @@ jobs:
                 uses: NASA-PDS/roundup-action@stable
                 with:
                     assembly: stable
+                    maven-build-phases: package
+                    maven-doc-phases: install,site,site:stage
+                    maven-stable-artifact-phases: clean,install,site,site:stage
                     packages: openjdk11-jdk
                 env:
                     ossrh_username: ${{secrets.OSSRH_USERNAME}}
